@@ -3,6 +3,11 @@ package controleestoqueuam;
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
 
+import java.io.File; 
+import java.io.IOException;
+import jxl.*; 
+import jxl.write.*;
+
 /**
  *
  * Rubens Guarnieri, R.A.: 20303016
@@ -11,6 +16,8 @@ import javax.swing.JOptionPane;
 public class ControlaEstoqueModel {
 
     private ArrayList<LivroModel> livros;
+    private TemplateView viewPrincipal;
+    
 
     public ControlaEstoqueModel() {
         livros = new ArrayList();
@@ -100,5 +107,57 @@ public class ControlaEstoqueModel {
             }
         }
         return false;
+    }
+    
+    
+    /**
+     *
+     * @throws IOException
+     */
+    public void salvaPlanilha() throws IOException, WriteException {
+        if (!livros.isEmpty()) {
+            WritableWorkbook workbook;
+            workbook = Workbook.createWorkbook(new File("C:/users/Erik Henrique/Livros.xls"));
+            WritableSheet sheet = workbook.createSheet("Livros", 0);
+            int contL = 2;
+            int contC;
+            
+            // Primeiro é coluna depois é linha
+            sheet.addCell(new Label(0, 0, "Livros"));
+            
+            sheet.addCell(new Label(0, 1, "Título"));
+            sheet.addCell(new Label(1, 1, "Código"));
+            sheet.addCell(new Label(2, 1, "Ano"));
+            sheet.addCell(new Label(3, 1, "Autor"));
+            sheet.addCell(new Label(4, 1, "Categoria"));
+            sheet.addCell(new Label(5, 1, "Preço"));
+
+            for (LivroModel e : livros) {
+                contC = 0;
+                sheet.addCell(new Label(contC, contL, e.getTitulo()));
+                contC++;
+                sheet.addCell(new Label(contC, contL, e.getCodigo()+""));
+                contC++;
+                sheet.addCell(new Label(contC, contL, e.getAnoEdicao()+""));
+                contC++;
+                sheet.addCell(new Label(contC, contL, e.getAutor()));
+                contC++;
+                sheet.addCell(new Label(contC, contL, e.getCategoria()));
+                contC++;
+                sheet.addCell(new Label(contC, contL, e.getPreco()+""));
+                contC++;
+
+                contL++;
+            }
+            
+            workbook.write(); 
+            workbook.close();
+            
+            JOptionPane.showMessageDialog(null, "Planilha salva com sucesso!");
+        } else {
+            JOptionPane.showMessageDialog(null, "Nenhum livro encontrado");
+        }
+        
+        
     }
 }

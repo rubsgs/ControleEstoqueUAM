@@ -2,16 +2,11 @@ package controleestoqueuam;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import javax.swing.JMenuItem;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-
-// JExcel
-import java.io.File; 
-import java.util.Date; 
-import jxl.*; 
+import jxl.write.WriteException;
 
 /**
  *
@@ -51,6 +46,7 @@ public class AppLivrariaController {
         viewConta.addActionListenerFecharConta(new EventoFechaConta());
         viewPedido = new EfetuaPedidoView();
         viewPedido.addActionListener(new EventoAdicionaItemPedido());
+        viewPrincipal.salvarAddActionListener(new EventoSalvarLivros());
         viewPrincipal.cadastroAddActionListener(new EventoCadastrarMenu());
         viewPrincipal.relatorioEstoqueAddActionListener(new EventoRelatorioMenu());
         viewPrincipal.relatorioEstoqueMinimoAddActionListener(new EventoRelatorioEstoqueMinimoMenu());
@@ -67,6 +63,20 @@ public class AppLivrariaController {
      * Eventos da janela principal, cada evento serve para alterar o painel
      * exibido no JFrame.
      */
+    public class EventoSalvarLivros implements ActionListener {
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            try {
+                controlaEstoque.salvaPlanilha();
+            } catch (IOException ex) {
+                Logger.getLogger(AppLivrariaController.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (WriteException ex) {
+                Logger.getLogger(AppLivrariaController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        
+    }
     public class EventoCadastrarMenu implements ActionListener {
 
         @Override
